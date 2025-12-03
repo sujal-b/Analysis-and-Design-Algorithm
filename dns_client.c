@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#define PORT 12345
+#define BUFFER_SIZE 1024
+
+int main() {
+    int sockfd;
+    char buffer[BUFFER_SIZE];
+    char query[BUFFER_SIZE];
+    struct sockaddr_in servaddr;
+    
+    // Create socket file descriptor (IPv4, UDP)
+    if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+    
+    // Configure server address logic (Where to send data)
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(PORT);
+    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Localhost
+    
+    int n;
+    socklen_t len;
+    
+    while (1) {
+        printf("\nEnter Hostname or IP (or 'exit' to quit): ");
+        
+        // Get user input
+        if (fgets(query, sizeof(query), stdin) == NULL) break;
+        
+        // Remove the newline character ('\n') added by fgets
+        query[strcspn(query, "\n")] = 0;
+        
+        // Check for exit
+        if (strcmp(query, "exit") == 0) {
+            break;
+        }
+        
+        if (strlen(query) == 0) {
+            continue;
+        }
+
+        // Send query to server
+        sendto(sockfd, (const char *)query, strlen(query), 0, (const struct sockaddr *)&servaddr, sizeof(servaddr));
+        
+        // Receive response
+        len = sizeof(servaddr);
+        n = recvfrom(sockfd, (char *)buffer, BUFFER_SIZE, 0, (struct sockaddr *)&servaddr, &len);
+        buffer[n] = '\0'; // Null-terminate string
+        
+        printf("Resolved Address: %s\n", buffer);
+    }
+    
+    close(sockfd);
+    return 0;
+}

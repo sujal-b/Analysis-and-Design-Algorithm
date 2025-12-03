@@ -1,0 +1,77 @@
+#include <stdio.h>
+#define INF 9999
+
+int main() {
+    int n, i, j, k;
+    int src, dest; // Variables for path finding
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int distance[n][n], next_hop[n][n];
+
+    printf("\nEnter cost matrix (Use %d for infinity/no link):\n", INF);
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < n; j++) {
+            scanf("%d", &distance[i][j]);
+            
+            // Initialize Next Hop
+            if(distance[i][j] != INF && i != j) {
+                next_hop[i][j] = j; // If direct link, next hop is j
+            } else {
+                next_hop[i][j] = -1; // No path
+            }
+        }
+    }
+
+    // --- Bellman-Ford Algorithm (Distance Vector Logic) ---
+    for(k = 0; k < n; k++) {
+        for(i = 0; i < n; i++) {
+            for(j = 0; j < n; j++) {
+                if(distance[i][k] + distance[k][j] < distance[i][j]) {
+                    distance[i][j] = distance[i][k] + distance[k][j];
+                    next_hop[i][j] = next_hop[i][k]; // Update path
+                }
+            }
+        }
+    }
+
+    // --- Print Routing Tables ---
+    for(i = 0; i < n; i++) {
+        printf("\nRouting Table for Node %d:\n", i + 1);
+        printf("Dest\tCost\tNext Hop\n");
+        printf("----\t----\t--------\n");
+        for(j = 0; j < n; j++) {
+            if(i != j && distance[i][j] != INF) {
+                printf("%d\t%d\t%d\n", j + 1, distance[i][j], next_hop[i][j] + 1);
+            }
+        }
+    }
+
+    // --- INTERACTIVE PATH FINDER (The part you asked for) ---
+    while(1) {
+        printf("\n\nEnter Source and Destination to find path (e.g., 1 3). Enter 0 0 to exit: ");
+        scanf("%d %d", &src, &dest);
+
+        if(src == 0 && dest == 0) break; // Exit condition
+
+        // Adjust for 0-based array indexing (User enters 1, we use 0)
+        src--; 
+        dest--;
+
+        if(src < 0 || src >= n || dest < 0 || dest >= n || distance[src][dest] == INF) {
+            printf("No path exists or invalid nodes!");
+        } else {
+            printf("Shortest Path: %d", src + 1);
+            
+            int curr = src;
+            while(curr != dest) {
+                curr = next_hop[curr][dest];
+                printf(" -> %d", curr + 1);
+            }
+            printf("\nTotal Cost: %d\n", distance[src][dest]);
+        }
+    }
+
+    return 0;
+}
