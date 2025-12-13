@@ -6,17 +6,12 @@ int main() {
 
     printf("--- SENDER SIDE ---\n");
     printf("Enter 4 data bits (D3, D5, D6, D7) separated by space: ");
-    // Store data in positions that are NOT powers of 2
     scanf("%d %d %d %d", &data[3], &data[5], &data[6], &data[7]);
-
-    // Calculation (Standard P1, P2, P4 positions)
-    // P1 (Pos 1) checks 1, 3, 5, 7
+    
     data[1] = data[3] ^ data[5] ^ data[7];
     
-    // P2 (Pos 2) checks 2, 3, 6, 7
     data[2] = data[3] ^ data[6] ^ data[7];
     
-    // P4 (Pos 4) checks 4, 5, 6, 7
     data[4] = data[5] ^ data[6] ^ data[7];
 
     printf("Encoded Data (P1 P2 D3 P4 D5 D6 D7): ");
@@ -25,7 +20,6 @@ int main() {
     }
     printf("\n");
 
-    // --- RECEIVER SIDE ---
     printf("\n--- RECEIVER SIDE ---\n");
     printf("Enter received 7 bits one by one: ");
     for(i = 1; i <= 7; i++) {
@@ -54,3 +48,4 @@ int main() {
 
     return 0;
 }
+
