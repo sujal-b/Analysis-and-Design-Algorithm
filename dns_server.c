@@ -7,7 +7,6 @@
 #define PORT 12345
 #define BUFFER_SIZE 1024
 
-// Simple structure to mimic the Python Dictionary
 struct DNSRecord {
     char key[100];
     char value[100];
@@ -18,19 +17,16 @@ int main() {
     char buffer[BUFFER_SIZE];
     struct sockaddr_in servaddr, cliaddr;
     
-    // Create socket file descriptor (IPv4, UDP)
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
-    
-    // Configure server address
+
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET; // IPv4
     servaddr.sin_addr.s_addr = INADDR_ANY; // Localhost
     servaddr.sin_port = htons(PORT);
     
-    // Bind the socket with the server address
     if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
@@ -76,4 +72,5 @@ int main() {
     }
     
     return 0;
+
 }
