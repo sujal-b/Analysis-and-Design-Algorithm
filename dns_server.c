@@ -49,14 +49,11 @@ int main() {
 
     while (1) {
         len = sizeof(cliaddr);
-        
-        // Receive data from client
         n = recvfrom(sockfd, (char *)buffer, BUFFER_SIZE, 0, (struct sockaddr *)&cliaddr, &len);
-        buffer[n] = '\0'; // Null-terminate the string
+        buffer[n] = '\0';
         
         printf("Received query: %s\n", buffer);
         
-        // Resolve Query (Linear search through the array)
         char *response = "No record found";
         
         for (int i = 0; i < table_size; i++) {
@@ -66,7 +63,6 @@ int main() {
             }
         }
         
-        // Send response back to client
         sendto(sockfd, (const char *)response, strlen(response), 0, (const struct sockaddr *)&cliaddr, len);
         printf("Sent response: %s\n\n", response);
     }
@@ -74,3 +70,4 @@ int main() {
     return 0;
 
 }
+
