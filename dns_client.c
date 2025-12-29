@@ -13,17 +13,15 @@ int main() {
     char query[BUFFER_SIZE];
     struct sockaddr_in servaddr;
     
-    // Create socket file descriptor (IPv4, UDP)
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
     
-    // Configure server address logic (Where to send data)
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); // Localhost
+    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     
     int n;
     socklen_t len;
@@ -34,7 +32,6 @@ int main() {
         // Get user input
         if (fgets(query, sizeof(query), stdin) == NULL) break;
         
-        // Remove the newline character ('\n') added by fgets
         query[strcspn(query, "\n")] = 0;
         
         // Check for exit
@@ -59,4 +56,5 @@ int main() {
     
     close(sockfd);
     return 0;
+
 }
