@@ -29,12 +29,10 @@ int main() {
     while (1) {
         printf("\nEnter Hostname or IP (or 'exit' to quit): ");
         
-        // Get user input
         if (fgets(query, sizeof(query), stdin) == NULL) break;
         
         query[strcspn(query, "\n")] = 0;
         
-        // Check for exit
         if (strcmp(query, "exit") == 0) {
             break;
         }
@@ -43,13 +41,11 @@ int main() {
             continue;
         }
 
-        // Send query to server
         sendto(sockfd, (const char *)query, strlen(query), 0, (const struct sockaddr *)&servaddr, sizeof(servaddr));
         
-        // Receive response
         len = sizeof(servaddr);
         n = recvfrom(sockfd, (char *)buffer, BUFFER_SIZE, 0, (struct sockaddr *)&servaddr, &len);
-        buffer[n] = '\0'; // Null-terminate string
+        buffer[n] = '\0';
         
         printf("Resolved Address: %s\n", buffer);
     }
@@ -58,3 +54,4 @@ int main() {
     return 0;
 
 }
+
