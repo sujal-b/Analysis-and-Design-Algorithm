@@ -6,7 +6,6 @@ int main() {
     printf("Enter Total Number of Frames to Send: ");
     scanf("%d", &total_frames);
 
-    // We simulate that a specific frame is lost to see how the code reacts
     printf("Enter the Frame Number to simulate as LOST (e.g., 2): ");
     scanf("%d", &lost_frame);
 
@@ -68,3 +67,4 @@ int main() {
 
     return 0;
 }
+
